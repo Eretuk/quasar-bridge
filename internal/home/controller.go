@@ -56,7 +56,7 @@ type Plan struct {
 }
 
 var serviceFields = map[string][]string{
-	"light.turn_on": {"brightness_pct", "color_temp_kelvin", "rgb_color", "transition"}, "light.turn_off": {"transition"},
+	"light.turn_on": {"brightness_pct", "brightness", "color_temp_kelvin", "rgb_color", "transition"}, "light.turn_off": {"transition"},
 	"switch.turn_on": {}, "switch.turn_off": {},
 	"climate.set_temperature": {"temperature", "hvac_mode"}, "climate.set_hvac_mode": {"hvac_mode"}, "climate.turn_off": {}, "climate.turn_on": {},
 	"cover.open_cover": {}, "cover.close_cover": {}, "cover.stop_cover": {}, "cover.set_cover_position": {"position"},
