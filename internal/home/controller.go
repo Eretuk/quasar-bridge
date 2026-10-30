@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"math"
 	"slices"
 	"strings"
 	"sync"
@@ -270,6 +271,19 @@ func (c *Controller) Handle(ctx context.Context, text string) (string, error) {
 		case "turn_on", "turn_off":
 			if a.Domain == "light" || a.Domain == "switch" || a.Domain == "fan" {
 				want := strings.TrimPrefix(a.Service, "turn_")
+				if a.Domain == "light" && a.Service == "turn_on" {
+					brightness := a.Data["brightness"]
+					// Match HA's normalization: zero brightness turns the light off.
+					if value, ok := brightness.(float64); ok {
+						brightness = min(255, max(0, math.Trunc(value)))
+					}
+					if pct, ok := a.Data["brightness_pct"].(float64); ok {
+						brightness = math.RoundToEven(255 * pct / 100)
+					}
+					if brightness == float64(0) {
+						want = "off"
+					}
+				}
 				if result.Data.State != want {
 					return "", errors.New("home action was not confirmed by device state")
 				}
